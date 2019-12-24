@@ -1,0 +1,54 @@
+version: '3.7'
+services:
+  
+  api:
+    container_name: api
+    build: .
+    command: npm run dev
+    volumes: 
+      - .:/code
+      - /code/node_modules
+    ports: 
+      - 3001:3001
+    depends_on: 
+      - mongo
+    networks: 
+      - api
+
+  mongo-express:
+    container_name: mongo-express
+    image: mongo-express
+    logging:
+      driver: none 
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_BASICAUTH_USERNAME: lucas
+      ME_CONFIG_BASICAUTH_PASSWORD: Mongo@123
+      ME_CONFIG_MONGODB_PORT: 27017
+      # ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      # ME_CONFIG_MONGODB_ADMINPASSWORD: Mongo@123
+    links:
+      - mongo
+    networks:
+      - mongo-network
+  
+  mongo:
+    container_name: mongo
+    image: mongo
+    # environment:
+    #   MONGO_INITDB_ROOT_USERNAME: root
+    #   MONGO_INITDB_ROOT_PASSWORD: Mongo@123
+    ports:
+      - "27017:27017"
+    volumes:
+      - /opt/node-api/mongo:/data/db
+    networks:
+      - api
+      - mongo-network
+    
+networks:
+    api:
+      name: api
+    mongo-network:
+      driver: bridge
