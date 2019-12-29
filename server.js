@@ -6,7 +6,15 @@ const requireDir = require("require-dir");
 // Iniciando APP
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors("*"));
+
+// Middleware Global
+app.use((req, res, next) => {
+  console.time('Request')
+  console.log(`Método: ${req.method}; URL: ${req.url}`);
+  next();
+  console.timeEnd('Request')
+});
 
 // Iniciando DB
 mongoose.connect("mongodb://mongo:27017/nodeapi", {

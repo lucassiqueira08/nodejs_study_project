@@ -19,14 +19,16 @@ module.exports = {
   },
 
   async update(req, res) {
-    let product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+    const { id } = req.params;
+    let product = await Product.findByIdAndUpdate(id, req.body, {
       new: true
     });
     return res.json(product);
   },
 
   async delete(req, res) {
-    await Product.findByIdAndRemove(req.params.id);
+    const { id } = req.params;
+    await Product.findByIdAndRemove(id);
     return res.send();
   }
 };
